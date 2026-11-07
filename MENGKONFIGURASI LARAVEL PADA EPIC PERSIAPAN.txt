@@ -1,4 +1,4 @@
-MENGKONFIGURASI LARAVEL PADA EPIC PERSIAPAN
+pMENGKONFIGURASI LARAVEL PADA EPIC PERSIAPAN
 1. Clone Repository
 Melakukan clone repository project MitraKerja dari GitHub ke komputer lokal.
 2. Install Dependency
@@ -6,6 +6,6 @@ Menjalankan perintah `composer install` untuk menginstal seluruh dependency yang
 3. Konfigurasi Environment
 Membuat file `.env` berdasarkan `.env.example`, kemudian menyesuaikan konfigurasi environment project.
 4. Konfigurasi Database
-Mengatur koneksi database pada file `.env` agar project Laravel terhubung dengan database cloud yang disediakan oleh dosen.
+Mengatur koneksi database pada file `.env example` agar project Laravel terhubung dengan database cloud yang disediakan oleh dosen.
 5 Verifikasi Konfigurasi
 Melakukan pengecekan konfigurasi dan memastikan koneksi database cloud dapat digunakan oleh project Laravel.
