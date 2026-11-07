@@ -1,5 +1,4 @@
 MENGKONFIGURASI LARAVEL PADA EPIC PERSIAPAN
-
 1. Clone Repository
 Melakukan clone repository project MitraKerja dari GitHub ke komputer lokal.
 2. Install Dependency
