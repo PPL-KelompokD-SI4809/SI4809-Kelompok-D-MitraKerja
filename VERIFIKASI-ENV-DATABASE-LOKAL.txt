@@ -1,11 +1,6 @@
-VERIFIKASI ENVIRONMENT & DATABASE LOKAL
-Tanggal: 8 November 2026
-
-1. Jalankan `git fetch origin`. Branch lokal dan GitHub sama di commit 7639c93; kode tidak diubah.
+1. Menjalankan `git fetch origin`. Branch lokal dan GitHub sama di commit 7639c93;
 2. `.env` sudah tersedia. Koneksi diarahkan ke MariaDB lokal `127.0.0.1:3306`, database `SI4809_PPL_D`.
 3. Cek koneksi Laravel lewat PHP CLI (tanpa Tinker):
    `php -r 'require "vendor/autoload.php"; $app = require "bootstrap/app.php"; $app->make(Illuminate\Contracts\Console\Kernel::class)->bootstrap(); $result = Illuminate\Support\Facades\DB::select("SELECT DATABASE() AS db, 1 AS ok"); echo json_encode($result), PHP_EOL;'`
    Hasil: `[{"db":"si4809_ppl_d","ok":1}]` — koneksi berhasil.
 4. Aplikasi berjalan di `http://127.0.0.1:8000`; halaman utama merespons HTTP 200.
-
-Catatan: Tidak ada password dicatat. `.env.example` memiliki perubahan lokal sebelumnya dan tidak diubah.
