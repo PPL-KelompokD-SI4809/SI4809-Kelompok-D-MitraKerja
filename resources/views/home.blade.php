@@ -15,7 +15,7 @@
     <div class="absolute inset-0 pointer-events-none z-0 overflow-hidden">
         <img src="{{ asset('images/kemnaker-hero-bg.jpg') }}"
              alt="Gedung Kementerian Ketenagakerjaan Republik Indonesia"
-             class="w-full h-full object-cover object-center filter brightness-[0.68] contrast-[1.08]"
+             class="w-full h-full object-cover object-center"
              loading="eager">
         {{-- Gradient Overlay Ala Konsep JejakKota (Disesuaikan ke Color Palette Kemnaker: Deep Navy) --}}
         <div class="absolute inset-0 bg-gradient-to-r from-[#071324]/95 via-[#071324]/80 to-[#071324]/40"></div>
@@ -96,7 +96,7 @@
             </div>
 
             {{-- Kolom Kanan: Floating Landmark Badge (Sesuai Konsep JejakKota "LOKASI JEJAK: Gedung Sate") --}}
-            <div class="hidden lg:flex items-center gap-3 px-4 py-3 rounded-2xl bg-[#0B1A30]/80 backdrop-blur-md border border-white/15 shadow-2xl text-white flex-shrink-0 mb-1">
+        <div class="hidden lg:flex items-center gap-3 px-4 py-3 rounded-2xl bg-[#0B1A30]/90 border border-white/15 shadow-2xl text-white flex-shrink-0 mb-1">
                 <div class="w-9 h-9 rounded-xl bg-blue-500/25 border border-blue-400/30 flex items-center justify-center text-blue-400 flex-shrink-0">
                     <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
@@ -128,8 +128,8 @@
             @for($i=0;$i<12;$i++)<div class="w-1.5 h-1.5 rounded-full bg-[#0062E3]"></div>@endfor
         </div>
         {{-- Soft glow --}}
-        <div class="absolute -top-20 right-1/4 w-72 h-72 rounded-full bg-blue-200/30 blur-3xl"></div>
-        <div class="absolute -bottom-16 left-1/3 w-56 h-56 rounded-full bg-amber-100/25 blur-3xl"></div>
+        <div class="absolute -top-20 right-1/4 w-72 h-72 rounded-full bg-blue-200/30 blur-2xl"></div>
+        <div class="absolute -bottom-16 left-1/3 w-56 h-56 rounded-full bg-amber-100/25 blur-2xl"></div>
     </div>
 
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -210,8 +210,8 @@
             @for($i=0;$i<15;$i++)<div class="w-1.5 h-1.5 rounded-full bg-[#0062E3]"></div>@endfor
         </div>
         {{-- Soft glow --}}
-        <div class="absolute -top-20 left-1/3 w-80 h-80 rounded-full bg-blue-100/25 blur-3xl"></div>
-        <div class="absolute -bottom-16 right-1/4 w-60 h-60 rounded-full bg-sky-100/30 blur-3xl"></div>
+        <div class="absolute -top-20 left-1/3 w-80 h-80 rounded-full bg-blue-100/25 blur-2xl"></div>
+        <div class="absolute -bottom-16 right-1/4 w-60 h-60 rounded-full bg-sky-100/30 blur-2xl"></div>
     </div>
 
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -451,7 +451,7 @@
             @for($i=0;$i<12;$i++)<div class="w-1.5 h-1.5 rounded-full bg-[#334155]"></div>@endfor
         </div>
         {{-- Soft glow --}}
-        <div class="absolute -bottom-20 left-1/4 w-72 h-72 rounded-full bg-blue-300/15 blur-3xl"></div>
+        <div class="absolute -bottom-20 left-1/4 w-72 h-72 rounded-full bg-blue-300/15 blur-2xl"></div>
     </div>
 
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -566,7 +566,7 @@
                 {{-- CTA Tunggal --}}
                 <div class="flex-shrink-0 w-full md:w-auto">
                     <button type="button"
-                            onclick="openAuthModal('perusahaan')"
+                            onclick="showToast('Pendaftaran pemberi kerja belum tersedia pada versi ini.', false)"
                             class="w-full md:w-auto inline-flex items-center justify-center gap-2.5 px-7 py-3.5 bg-[#0062E3] hover:bg-blue-700 active:scale-95 text-white font-semibold text-xs sm:text-sm rounded-xl shadow-md hover:shadow-lg transition cursor-pointer">
                         <span>Daftar sebagai Pemberi Kerja</span>
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -591,7 +591,7 @@
      aria-labelledby="job-modal-title">
 
     {{-- Backdrop --}}
-    <div class="fixed inset-0 bg-gray-900/50 backdrop-blur-sm" onclick="closeJobModal()"></div>
+    <div class="fixed inset-0 bg-gray-900/55" onclick="closeJobModal()"></div>
 
     <div class="relative min-h-full flex items-center justify-center p-4 sm:p-6">
         <div class="relative w-full max-w-2xl bg-white rounded-3xl shadow-2xl border border-gray-100 overflow-hidden">
@@ -682,62 +682,66 @@
      aria-modal="true"
      aria-labelledby="auth-modal-title">
 
-    <div class="fixed inset-0 bg-gray-900/50 backdrop-blur-sm" onclick="closeAuthModal()"></div>
+    <div class="fixed inset-0 bg-[#071324]/70" onclick="closeAuthModal()"></div>
 
     <div class="relative min-h-full flex items-center justify-center p-4 sm:p-6">
-        <div class="relative w-full max-w-md bg-white rounded-3xl shadow-2xl border border-gray-100">
+        <div class="relative w-full max-w-xl overflow-hidden rounded-3xl border border-white/20 bg-white shadow-2xl shadow-slate-950/30">
 
             <button type="button"
                     onclick="closeAuthModal()"
-                    class="absolute top-5 right-5 p-2 rounded-full text-gray-400 hover:text-gray-700 hover:bg-gray-100 transition cursor-pointer z-10">
+                    class="absolute top-4 right-4 p-2 rounded-full text-white/70 hover:bg-white/10 hover:text-white transition cursor-pointer z-20">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
                 </svg>
             </button>
 
-            <div class="p-6 sm:p-8">
-                <div class="text-center mb-7">
-                    <div class="w-13 h-13 rounded-2xl bg-blue-50 text-[#0062E3] mx-auto flex items-center justify-center mb-3" style="width:52px;height:52px;">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
-                        </svg>
-                    </div>
-                    <h3 id="auth-modal-title" class="text-xl font-extrabold text-[#0B1A30]">Masuk ke MitraKerja</h3>
-                    <p class="text-xs text-gray-500 mt-1">Pilih peran akun Anda untuk melanjutkan akses portal</p>
+            <div class="relative overflow-hidden bg-gradient-to-br from-[#071B38] via-[#0A3267] to-[#0062E3] px-6 py-7 sm:px-8">
+                <div class="pointer-events-none absolute -right-12 -top-16 h-44 w-44 rounded-full border-[18px] border-white/10"></div>
+                <div class="pointer-events-none absolute bottom-0 left-0 h-20 w-52 bg-gradient-to-r from-sky-300/15 to-transparent"></div>
+                <div class="relative pr-8">
+                    <p id="auth-modal-eyebrow" class="mb-2 text-[11px] font-bold tracking-[0.16em] text-sky-200">MULAI BERSAMA MITRAKERJA</p>
+                    <h3 id="auth-modal-title" class="text-2xl font-extrabold tracking-tight text-white">Pilih peran Anda di MitraKerja</h3>
+                    <p id="auth-modal-description" class="mt-2 text-sm leading-relaxed text-blue-100">Pilih jenis akun untuk memulai perjalanan Anda.</p>
                 </div>
+            </div>
 
+            <div class="p-6 sm:p-8">
                 <div class="space-y-3">
-                    <div onclick="selectAuthRole('Pencari Kerja')"
-                         class="p-4 rounded-2xl border border-gray-200 hover:border-[#0062E3] hover:bg-blue-50/40 transition cursor-pointer group flex items-center gap-4">
-                        <div class="w-11 h-11 rounded-xl bg-blue-100/70 text-[#0062E3] flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform">
+                    <button type="button"
+                            id="auth-jobseeker-option"
+                            onclick="chooseJobSeekerAuth()"
+                            class="group flex w-full items-center gap-4 rounded-2xl border border-blue-100 bg-white px-4 py-5 text-left shadow-sm transition hover:border-[#0062E3] hover:bg-blue-50/60 hover:shadow-md focus:outline-none focus:ring-4 focus:ring-blue-100 disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:border-blue-100 disabled:hover:bg-white disabled:hover:shadow-sm">
+                        <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-blue-50 text-[#0062E3] transition-transform group-hover:scale-105">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
                             </svg>
                         </div>
-                        <div class="flex-grow min-w-0">
-                            <h4 class="text-sm font-bold text-gray-900 group-hover:text-[#0062E3] transition-colors">Pencari Kerja</h4>
-                            <p class="text-xs text-gray-500 mt-0.5">Cari lowongan, lengkapi profil, dan lamar kerja</p>
+                        <div class="min-w-0 flex-1">
+                            <h4 class="text-sm font-bold text-slate-900 transition-colors group-hover:text-[#0062E3]">Pencari Kerja</h4>
+                            <p id="auth-jobseeker-copy" class="mt-1 text-xs leading-relaxed text-slate-500">Buat akun untuk mulai mencari peluang kerja.</p>
                         </div>
-                        <span class="text-gray-400 group-hover:text-[#0062E3] group-hover:translate-x-1 transition text-lg leading-none">&rarr;</span>
-                    </div>
+                        <span id="auth-jobseeker-arrow" class="shrink-0 text-slate-400 transition-transform group-hover:translate-x-1 group-hover:text-[#0062E3]">&rarr;</span>
+                    </button>
 
-                    <div onclick="selectAuthRole('Pemberi Kerja / Perusahaan')"
-                         class="p-4 rounded-2xl border border-gray-200 hover:border-[#0062E3] hover:bg-blue-50/40 transition cursor-pointer group flex items-center gap-4">
-                        <div class="w-11 h-11 rounded-xl bg-amber-100/70 text-amber-600 flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform">
+                    <button type="button"
+                            id="auth-employer-option"
+                            onclick="chooseEmployerAuth()"
+                            class="group flex w-full items-center gap-4 rounded-2xl border border-slate-200 bg-white px-4 py-5 text-left shadow-sm transition hover:border-amber-300 hover:bg-amber-50/40 hover:shadow-md focus:outline-none focus:ring-4 focus:ring-amber-100 disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:border-slate-200 disabled:hover:bg-white disabled:hover:shadow-sm">
+                        <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-amber-100 text-amber-600">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
                             </svg>
                         </div>
-                        <div class="flex-grow min-w-0">
-                            <h4 class="text-sm font-bold text-gray-900 group-hover:text-[#0062E3] transition-colors">Pemberi Kerja / Perusahaan</h4>
-                            <p class="text-xs text-gray-500 mt-0.5">Pasang lowongan kerja dan pantau kandidat</p>
+                        <div class="min-w-0 flex-1">
+                            <h4 class="text-sm font-bold text-slate-700 transition-colors group-hover:text-amber-700">Pemberi Kerja / Perusahaan</h4>
+                            <p id="auth-employer-copy" class="mt-1 text-xs leading-relaxed text-slate-500">Pendaftaran perusahaan sedang dipersiapkan.</p>
                         </div>
-                        <span class="text-gray-400 group-hover:text-[#0062E3] group-hover:translate-x-1 transition text-lg leading-none">&rarr;</span>
-                    </div>
+                        <span class="shrink-0 text-slate-400 transition-transform group-hover:translate-x-1 group-hover:text-amber-600">&rarr;</span>
+                    </button>
                 </div>
 
-                <p class="text-[11px] text-center text-gray-400 mt-6">
-                    Akses Administrator dikelola secara terpusat oleh Kementerian Ketenagakerjaan RI.
+                <p class="mt-5 text-center text-[11px] leading-relaxed text-slate-400">
+                    Akses Administrator dikelola secara internal.
                 </p>
             </div>
         </div>
@@ -766,6 +770,34 @@ let currentSearch = '';
 let currentModalJob  = null;
 let savedJobIds   = new Set();
 let toastTimer    = null;
+let scrollLockState = null;
+
+// Menahan scroll tanpa mengubah lebar area konten ketika scrollbar hilang.
+function lockPageScroll() {
+    if (scrollLockState) return;
+
+    const body = document.body;
+    const currentPadding = Number.parseFloat(window.getComputedStyle(body).paddingRight) || 0;
+    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+
+    scrollLockState = {
+        overflow: body.style.overflow,
+        paddingRight: body.style.paddingRight,
+    };
+
+    body.style.overflow = 'hidden';
+    if (scrollbarWidth > 0) {
+        body.style.paddingRight = `${currentPadding + scrollbarWidth}px`;
+    }
+}
+
+function unlockPageScroll() {
+    if (!scrollLockState) return;
+
+    document.body.style.overflow = scrollLockState.overflow;
+    document.body.style.paddingRight = scrollLockState.paddingRight;
+    scrollLockState = null;
+}
 
 // ===== Toast =====
 function showToast(message, isSuccess = true) {
@@ -910,12 +942,12 @@ function openJobDetailModal(job) {
 
     updateSaveButton();
     document.getElementById('job-modal').classList.remove('hidden');
-    document.body.style.overflow = 'hidden';
+    lockPageScroll();
 }
 
 function closeJobModal() {
     document.getElementById('job-modal').classList.add('hidden');
-    document.body.style.overflow = '';
+    unlockPageScroll();
 }
 
 function toggleSaveJob() {
@@ -949,25 +981,56 @@ function applyJob() {
     showToast(`Lamaran untuk "${posisi}" berhasil dikirim!`);
 }
 
-// ===== Modal Auth =====
+// ===== Pilihan jenis akun =====
+let authModalMode = 'daftar';
+
 function openAuthModal(mode) {
+    authModalMode = mode === 'masuk' ? 'masuk' : 'daftar';
+
+    const isRegistration = authModalMode === 'daftar';
     const titleEl = document.getElementById('auth-modal-title');
-    if (mode === 'masuk')       titleEl.textContent = 'Masuk ke MitraKerja';
-    else if (mode === 'perusahaan') titleEl.textContent = 'Daftar Mitra Perusahaan';
-    else                        titleEl.textContent = 'Daftar Akun Baru MitraKerja';
+    const eyebrowEl = document.getElementById('auth-modal-eyebrow');
+    const descriptionEl = document.getElementById('auth-modal-description');
+    const jobseekerOption = document.getElementById('auth-jobseeker-option');
+    const employerOption = document.getElementById('auth-employer-option');
+    const jobseekerCopy = document.getElementById('auth-jobseeker-copy');
+    const jobseekerArrow = document.getElementById('auth-jobseeker-arrow');
+
+    eyebrowEl.textContent = isRegistration ? 'MULAI BERSAMA MITRAKERJA' : 'AKSES MITRAKERJA';
+    titleEl.textContent = isRegistration
+        ? 'Pilih peran Anda di MitraKerja'
+        : 'Masuk ke MitraKerja';
+    descriptionEl.textContent = isRegistration
+        ? 'Pilih jenis akun untuk memulai perjalanan Anda.'
+        : 'Fitur masuk sedang dipersiapkan. Pilihan peran ditampilkan untuk alur yang akan datang.';
+
+    jobseekerOption.disabled = !isRegistration;
+    employerOption.disabled = !isRegistration;
+    jobseekerCopy.textContent = isRegistration
+        ? 'Buat akun untuk mulai mencari peluang kerja.'
+        : 'Akses masuk pencari kerja belum tersedia pada versi ini.';
+    jobseekerArrow.classList.toggle('opacity-0', !isRegistration);
 
     document.getElementById('auth-modal').classList.remove('hidden');
-    document.body.style.overflow = 'hidden';
+    lockPageScroll();
 }
 
 function closeAuthModal() {
     document.getElementById('auth-modal').classList.add('hidden');
-    document.body.style.overflow = '';
+    unlockPageScroll();
 }
 
-function selectAuthRole(role) {
-    closeAuthModal();
-    showToast(`Mengarahkan ke halaman ${role}...`, false);
+function chooseJobSeekerAuth() {
+    if (authModalMode === 'daftar') {
+        window.location.href = '{{ route('jobseeker.register') }}';
+    }
+}
+
+function chooseEmployerAuth() {
+    if (authModalMode === 'daftar') {
+        closeAuthModal();
+        showToast('Pendaftaran pemberi kerja sedang dipersiapkan.', false);
+    }
 }
 
 // ===== Keyboard ESC =====
