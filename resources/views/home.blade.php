@@ -985,6 +985,10 @@ function applyJob() {
 let authModalMode = 'daftar';
 
 function openAuthModal(mode) {
+    if (mode === 'masuk') {
+        window.location.href = '{{ route('login') }}';
+        return;
+    }
     authModalMode = mode === 'masuk' ? 'masuk' : 'daftar';
 
     const isRegistration = authModalMode === 'daftar';

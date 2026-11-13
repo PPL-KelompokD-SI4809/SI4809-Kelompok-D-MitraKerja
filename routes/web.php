@@ -7,6 +7,8 @@ Route::get('/', function () {
     return view('home');
 })->name('home');
 
+Route::view('/masuk', 'auth.login')->name('login');
+
 Route::get('/daftar/pencari-kerja', [JobSeekerRegistrationController::class, 'create'])
     ->name('jobseeker.register');
 
