@@ -734,9 +734,13 @@
                         </div>
                         <div class="min-w-0 flex-1">
                             <h4 class="text-sm font-bold text-slate-700 transition-colors group-hover:text-amber-700">Pemberi Kerja / Perusahaan</h4>
+                            <p id="auth-employer-copy" class="mt-1 text-xs leading-relaxed text-slate-500">Buat akun perusahaan untuk memasang lowongan kerja.</p>
+                        </div>
+                        <span id="auth-employer-arrow" class="shrink-0 text-slate-400 transition-transform group-hover:translate-x-1 group-hover:text-amber-600">&rarr;</span>
                             <p id="auth-employer-copy" class="mt-1 text-xs leading-relaxed text-slate-500">Pendaftaran perusahaan sedang dipersiapkan.</p>
                         </div>
                         <span class="shrink-0 text-slate-400 transition-transform group-hover:translate-x-1 group-hover:text-amber-600">&rarr;</span>
+
                     </button>
                 </div>
 
@@ -1000,6 +1004,9 @@ function openAuthModal(mode) {
     const jobseekerCopy = document.getElementById('auth-jobseeker-copy');
     const jobseekerArrow = document.getElementById('auth-jobseeker-arrow');
 
+    const employerCopy = document.getElementById('auth-employer-copy');
+    const employerArrow = document.getElementById('auth-employer-arrow');
+
     eyebrowEl.textContent = isRegistration ? 'MULAI BERSAMA MITRAKERJA' : 'AKSES MITRAKERJA';
     titleEl.textContent = isRegistration
         ? 'Pilih peran Anda di MitraKerja'
@@ -1014,7 +1021,10 @@ function openAuthModal(mode) {
         ? 'Buat akun untuk mulai mencari peluang kerja.'
         : 'Akses masuk pencari kerja belum tersedia pada versi ini.';
     jobseekerArrow.classList.toggle('opacity-0', !isRegistration);
-
+    employerCopy.textContent = isRegistration
+        ? 'Buat akun perusahaan untuk memasang lowongan kerja.'
+        : 'Akses masuk perusahaan belum tersedia pada versi ini.';
+    employerArrow.classList.toggle('opacity-0', !isRegistration);
     document.getElementById('auth-modal').classList.remove('hidden');
     lockPageScroll();
 }
@@ -1032,8 +1042,11 @@ function chooseJobSeekerAuth() {
 
 function chooseEmployerAuth() {
     if (authModalMode === 'daftar') {
+
+        window.location.href = '{{ route('employer.register') }}';
         closeAuthModal();
         showToast('Pendaftaran pemberi kerja sedang dipersiapkan.', false);
+
     }
 }
 

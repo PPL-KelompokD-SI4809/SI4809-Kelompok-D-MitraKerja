@@ -1,8 +1,12 @@
 <?php
 
 namespace Tests\Feature;
-
+use App\Enums\UserRole;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+
 use Tests\TestCase;
 
 class JobSeekerRegistrationTest extends TestCase
@@ -36,8 +40,39 @@ class JobSeekerRegistrationTest extends TestCase
         $this->assertArrayNotHasKey('password_confirmation', session()->getOldInput());
     }
 
+
+    public function test_registration_creates_job_seeker_account_with_job_seeker_role(): void
     public function test_registration_is_blocked_until_account_role_dependency_exists(): void
+
     {
+        $response = $this->from(route('jobseeker.register'))->post(route('jobseeker.register.store'), [
+            'name' => 'Didit Aditya Rahman',
+            'email' => 'didit@example.test',
+            'password' => 'rahasia123',
+            'password_confirmation' => 'rahasia123',
+        ]);
+
+        $response->assertRedirect(route('jobseeker.register'));
+        $response->assertSessionHas('status');
+        $this->assertDatabaseHas('users', [
+            'name' => 'Didit Aditya Rahman',
+            'email' => 'didit@example.test',
+            'role' => UserRole::JOB_SEEKER->value,
+        ]);
+
+        $user = User::where('email', 'didit@example.test')->first();
+        $this->assertNotNull($user);
+        $this->assertSame('job_seeker', $user->role);
+        $this->assertTrue($user->isJobSeeker());
+        $this->assertFalse($user->isEmployer());
+    }
+
+    public function test_registration_is_blocked_if_role_column_missing(): void
+    {
+        Schema::table('users', function ($table) {
+            $table->dropColumn('role');
+        });
+
         $response = $this->from(route('jobseeker.register'))->post(route('jobseeker.register.store'), [
             'name' => 'Didit Aditya Rahman',
             'email' => 'didit@example.test',
