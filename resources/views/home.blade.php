@@ -737,6 +737,10 @@
                             <p id="auth-employer-copy" class="mt-1 text-xs leading-relaxed text-slate-500">Buat akun perusahaan untuk memasang lowongan kerja.</p>
                         </div>
                         <span id="auth-employer-arrow" class="shrink-0 text-slate-400 transition-transform group-hover:translate-x-1 group-hover:text-amber-600">&rarr;</span>
+                            <p id="auth-employer-copy" class="mt-1 text-xs leading-relaxed text-slate-500">Pendaftaran perusahaan sedang dipersiapkan.</p>
+                        </div>
+                        <span class="shrink-0 text-slate-400 transition-transform group-hover:translate-x-1 group-hover:text-amber-600">&rarr;</span>
+
                     </button>
                 </div>
 
@@ -999,6 +1003,7 @@ function openAuthModal(mode) {
     const employerOption = document.getElementById('auth-employer-option');
     const jobseekerCopy = document.getElementById('auth-jobseeker-copy');
     const jobseekerArrow = document.getElementById('auth-jobseeker-arrow');
+
     const employerCopy = document.getElementById('auth-employer-copy');
     const employerArrow = document.getElementById('auth-employer-arrow');
 
@@ -1020,7 +1025,6 @@ function openAuthModal(mode) {
         ? 'Buat akun perusahaan untuk memasang lowongan kerja.'
         : 'Akses masuk perusahaan belum tersedia pada versi ini.';
     employerArrow.classList.toggle('opacity-0', !isRegistration);
-
     document.getElementById('auth-modal').classList.remove('hidden');
     lockPageScroll();
 }
@@ -1038,7 +1042,11 @@ function chooseJobSeekerAuth() {
 
 function chooseEmployerAuth() {
     if (authModalMode === 'daftar') {
+
         window.location.href = '{{ route('employer.register') }}';
+        closeAuthModal();
+        showToast('Pendaftaran pemberi kerja sedang dipersiapkan.', false);
+
     }
 }
 

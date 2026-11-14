@@ -2,14 +2,20 @@
 
 namespace App\Http\Controllers;
 
+
 use App\Enums\UserRole;
+
+
 use App\Models\User;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Validation\Rule;
+
 use Illuminate\Validation\ValidationException;
+
+
 use Illuminate\View\View;
 
 class JobSeekerRegistrationController extends Controller
@@ -23,6 +29,7 @@ class JobSeekerRegistrationController extends Controller
     }
 
     /**
+
      * Create a job-seeker account with the job_seeker role.
      *
      * The role is strictly enforced by the server and never trusted from raw user input.
@@ -47,6 +54,16 @@ class JobSeekerRegistrationController extends Controller
                     ->withErrors(['role' => 'Peran yang dipilih tidak valid untuk pendaftaran pencari kerja.']);
             }
         }
+
+     * Create a job-seeker account once the account and role contracts exist.
+     *
+     * SKM-45 owns account storage and SKM-36 owns the role contract. This
+     * controller deliberately refuses to create an account until both are
+     * available, preventing a public registration from producing an account
+     * without a role or from accepting an arbitrary role from the request.
+     */
+    public function store(Request $request): RedirectResponse
+    {
 
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
@@ -80,7 +97,10 @@ class JobSeekerRegistrationController extends Controller
                 'name' => $validated['name'],
                 'email' => $validated['email'],
                 'password' => $validated['password'],
+
                 'role' => UserRole::JOB_SEEKER->value,
+                'role' => 'pencari_kerja',
+
             ]);
         } catch (QueryException) {
             return $this->registrationDependencyUnavailable($request);

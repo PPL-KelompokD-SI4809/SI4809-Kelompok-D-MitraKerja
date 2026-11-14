@@ -1,11 +1,12 @@
 <?php
 
 namespace Tests\Feature;
-
 use App\Enums\UserRole;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+
 use Tests\TestCase;
 
 class JobSeekerRegistrationTest extends TestCase
@@ -39,7 +40,10 @@ class JobSeekerRegistrationTest extends TestCase
         $this->assertArrayNotHasKey('password_confirmation', session()->getOldInput());
     }
 
+
     public function test_registration_creates_job_seeker_account_with_job_seeker_role(): void
+    public function test_registration_is_blocked_until_account_role_dependency_exists(): void
+
     {
         $response = $this->from(route('jobseeker.register'))->post(route('jobseeker.register.store'), [
             'name' => 'Didit Aditya Rahman',

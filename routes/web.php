@@ -4,6 +4,7 @@ use App\Http\Controllers\EmployerRegistrationController;
 use App\Http\Controllers\JobSeekerRegistrationController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RegistrationController;
+use App\Http\Controllers\JobSeekerRegistrationController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -11,7 +12,6 @@ Route::get('/', function () {
 })->name('home');
 
 Route::view('/masuk', 'auth.login')->name('login');
-
 // Pencari Kerja Registration Routes
 Route::get('/daftar/pencari-kerja', [JobSeekerRegistrationController::class, 'create'])
     ->name('jobseeker.register');
@@ -38,3 +38,4 @@ Route::get('/profil', [ProfileController::class, 'show'])->name('profile.show');
 Route::get('/profile', [ProfileController::class, 'show']);
 Route::match(['put', 'patch'], '/profil', [ProfileController::class, 'update'])->name('profile.update');
 Route::match(['put', 'patch'], '/profile', [ProfileController::class, 'update']);
+
