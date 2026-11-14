@@ -1,0 +1,23 @@
+pMENGKONFIGURASI LARAVEL PADA EPIC PERSIAPAN
+1. Clone Repository
+Melakukan clone repository project MitraKerja dari GitHub ke komputer lokal.
+2. Install Dependency
+Menjalankan perintah `composer install` untuk menginstal seluruh dependency yang dibutuhkan oleh Laravel.
+3. Konfigurasi Environment
+Membuat file `.env` berdasarkan `.env.example`, kemudian menyesuaikan konfigurasi environment project.
+4. Konfigurasi Database
+Mengatur koneksi database pada file `.env example` agar project Laravel terhubung dengan database cloud yang disediakan oleh dosen.
+5 Verifikasi Konfigurasi
+Melakukan pengecekan konfigurasi dan memastikan koneksi database cloud dapat digunakan oleh project Laravel.
+
+
+Farhan — SKM-23: Smoke Test Integrasi Website
+
+Langkah:
+Menjalankan composer install, npm install, npm run build dengan Node 22, membuat .env, dan php artisan key:generate. Mengecek nama database dengan SELECT, menjalankan php artisan config:clear, php artisan db:show, dan php artisan serve. Menguji HTTP tiga kali serta buka dan refresh lewat Edge headless.
+
+Hasil:
+Laravel 12.70.2, dependensi, dan build aset berhasil disiapkan. Koneksi MySQL ke SI4809_PPL_D berhasil. Landing page MitraKerja tampil dengan HTTP 200 saat dibuka dan di-refresh. Aset lokal mendapat HTTP 200 dan tidak ada error JavaScript. Session dan cache memakai file lokal. Tidak menjalankan migration/seeder atau mengubah tabel dan data online.
+
+Catatan:
+Nama database di server memakai huruf kapital SI4809_PPL_D, jadi .env lokal disesuaikan. Node 18 tidak sesuai kebutuhan Vite, sehingga build memakai Node 22 sementara. Unduhan awal sempat timeout, lalu berhasil saat dicoba ulang dengan akses jaringan. Tidak ditemukan error 404 atau 500 selama smoke test.
