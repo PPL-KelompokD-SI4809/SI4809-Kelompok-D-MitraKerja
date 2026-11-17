@@ -15,10 +15,7 @@ class User extends Authenticatable
     use HasFactory, Notifiable;
 
     public const ROLE_JOB_SEEKER = UserRole::JOB_SEEKER->value;
-
     public const ROLE_EMPLOYER = UserRole::EMPLOYER->value;
-
-    public const ROLE_USER = UserRole::USER->value;
 
     /**
      * The attributes that are mass assignable.

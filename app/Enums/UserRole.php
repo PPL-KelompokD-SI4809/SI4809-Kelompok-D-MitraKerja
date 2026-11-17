@@ -6,7 +6,6 @@ enum UserRole: string
 {
     case JOB_SEEKER = 'job_seeker';
     case EMPLOYER = 'employer';
-    case USER = 'user';
 
     /**
      * Get all valid role values as an array of strings.
@@ -19,7 +18,8 @@ enum UserRole: string
     }
 
     /**
-     * Resolve a role strictly from an allowed registration type or string.
+     * Resolve a role strictly from an allowed registration type.
+     * Rejects any unrecognized or privileged roles (e.g. admin, superadmin).
      */
     public static function fromRegistrationType(?string $type): ?self
     {
@@ -32,7 +32,6 @@ enum UserRole: string
         return match ($normalized) {
             'job_seeker', 'jobseeker', 'pencari_kerja', 'pencari kerja', 'pencari-kerja' => self::JOB_SEEKER,
             'employer', 'perusahaan', 'pemberi_kerja', 'pemberi kerja', 'pemberi-kerja' => self::EMPLOYER,
-            'user', 'pengguna' => self::USER,
             default => null,
         };
     }
@@ -45,7 +44,6 @@ enum UserRole: string
         return match ($this) {
             self::JOB_SEEKER => 'Pencari Kerja',
             self::EMPLOYER => 'Perusahaan',
-            self::USER => 'Pengguna',
         };
     }
 }
