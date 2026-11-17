@@ -1,3 +1,4 @@
+
 <?php
 
 use App\Http\Controllers\EmployerRegistrationController;
@@ -31,30 +32,34 @@ Route::get('/daftar/perusahaan', [EmployerRegistrationController::class, 'create
 Route::post('/daftar/perusahaan', [EmployerRegistrationController::class, 'store'])
     ->name('employer.register.store');
 
-// Unified Public Registration Endpoint (Whitelists role: job_seeker, employer)
+// Unified Public Registration Endpoint
 Route::post('/daftar', [RegistrationController::class, 'store'])
     ->name('register.store');
 
 Route::post('/register', [RegistrationController::class, 'store'])
     ->name('register');
 
+// Backend User Account Storage Endpoint (SKM-45)
+Route::post('/users', [UserController::class, 'store'])
+    ->name('users.store');
+
 // ============================================================
 // Route yang Memerlukan Login (auth)
-// SKM-39: Lindungi route yang memerlukan login
+// SKM-39
 // ============================================================
 
 Route::middleware(['auth'])->group(function () {
 
-    // Profile & Role inspection and updates (role cannot be changed via profile)
+    // Profile routes
     Route::get('/profil', [ProfileController::class, 'show'])->name('profile.show');
     Route::get('/profile', [ProfileController::class, 'show']);
     Route::match(['put', 'patch'], '/profil', [ProfileController::class, 'update'])->name('profile.update');
     Route::match(['put', 'patch'], '/profile', [ProfileController::class, 'update']);
 
     // ============================================================
-    // Route Khusus Pencari Kerja (job_seeker)
-    // SKM-39: Batasi route berdasarkan peran pencari kerja
+    // Route Khusus Pencari Kerja
     // ============================================================
+
     Route::middleware(['role:job_seeker'])->group(function () {
         Route::get('/dashboard/pencari-kerja', function () {
             return view('dashboard.job-seeker');
@@ -66,9 +71,9 @@ Route::middleware(['auth'])->group(function () {
     });
 
     // ============================================================
-    // Route Khusus Perusahaan (employer)
-    // SKM-39: Batasi route berdasarkan peran perusahaan
+    // Route Khusus Perusahaan
     // ============================================================
+
     Route::middleware(['role:employer'])->group(function () {
         Route::get('/dashboard/perusahaan', function () {
             return view('dashboard.employer');
@@ -79,5 +84,3 @@ Route::middleware(['auth'])->group(function () {
         })->name('kelola-lowongan.index');
     });
 });
-
-
