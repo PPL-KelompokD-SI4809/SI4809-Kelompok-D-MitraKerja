@@ -4,6 +4,7 @@ use App\Http\Controllers\EmployerRegistrationController;
 use App\Http\Controllers\JobSeekerRegistrationController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RegistrationController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 // ============================================================
