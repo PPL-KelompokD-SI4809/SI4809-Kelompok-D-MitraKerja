@@ -1,0 +1,103 @@
+Zidan — SKM-39: Batasi Akses Halaman Berdasarkan Peran
+
+================================================================
+1. Sinkronisasi Branch
+================================================================
+- Branch aktif: Branch_Zidan.
+- Menjalankan `git fetch --all` lalu `git merge origin/main --no-edit`.
+- Merge berhasil tanpa konflik. Branch Zidan sekarang memiliki
+  semua kode dari main termasuk SKM-36 (UserRole enum, model User
+  dengan kolom role, migrasi, dan factory).
+
+================================================================
+2. Apa Saja yang Dikerjakan?
+================================================================
+
+A. Membuat Middleware `EnsureUserHasRole`
+   - File baru: `app/Http/Middleware/EnsureUserHasRole.php`
+   - Middleware menerima parameter role (satu atau lebih) dan
+     memeriksa kolom `role` pada User yang sudah ter-autentikasi.
+   - Jika role tidak sesuai, server mengembalikan HTTP 403 Forbidden.
+   - Contoh penggunaan: `->middleware('role:job_seeker')`
+
+B. Mendaftarkan Middleware Alias di `bootstrap/app.php`
+   - Menambahkan alias `'role' => EnsureUserHasRole::class` pada
+     bagian `withMiddleware()` sesuai pola Laravel 12.
+
+C. Melindungi Route yang Memerlukan Login
+   - Route `/profil`, `/profile` (GET/PUT/PATCH) sekarang berada
+     di dalam group `Route::middleware(['auth'])`.
+   - Pengguna tanpa login otomatis diarahkan ke halaman `/masuk`.
+
+D. Membatasi Route Berdasarkan Peran
+   - Route khusus Pencari Kerja (job_seeker):
+     * `/dashboard/pencari-kerja` → Dashboard pencari kerja
+     * `/lowongan` → Daftar lowongan pekerjaan
+     Dilindungi oleh `middleware(['auth', 'role:job_seeker'])`.
+
+   - Route khusus Perusahaan (employer):
+     * `/dashboard/perusahaan` → Dashboard perusahaan
+     * `/kelola-lowongan` → Kelola lowongan pekerjaan
+     Dilindungi oleh `middleware(['auth', 'role:employer'])`.
+
+E. Pemeriksaan Server-Side (Bukan Hanya Menyembunyikan Menu)
+   - Proteksi dilakukan di level middleware server, bukan hanya
+     menyembunyikan elemen menu di frontend.
+   - Akses langsung via URL (ketik di address bar) tetap diperiksa
+     dan ditolak jika role tidak sesuai.
+
+F. Membuat View Dashboard
+   - `resources/views/dashboard/job-seeker.blade.php`
+   - `resources/views/dashboard/employer.blade.php`
+
+================================================================
+3. Hasil Testing
+================================================================
+Semua test dijalankan menggunakan PHPUnit:
+
+File test: `tests/Feature/RoleAccessTest.php`
+
+Skenario yang diuji:
+ 1. Guest tidak bisa akses dashboard pencari kerja → redirect login  ✓
+ 2. Guest tidak bisa akses dashboard perusahaan → redirect login     ✓
+ 3. Guest tidak bisa akses halaman profil → redirect login           ✓
+ 4. Guest tidak bisa akses halaman lowongan → redirect login         ✓
+ 5. Guest tidak bisa akses halaman kelola lowongan → redirect login  ✓
+ 6. Pencari kerja tidak bisa akses dashboard perusahaan → 403        ✓
+ 7. Pencari kerja tidak bisa akses kelola lowongan → 403             ✓
+ 8. Perusahaan tidak bisa akses dashboard pencari kerja → 403        ✓
+ 9. Perusahaan tidak bisa akses lowongan pencari kerja → 403         ✓
+10. Pencari kerja bisa akses dashboard sendiri → 200                 ✓
+11. Pencari kerja bisa akses lowongan → 200                          ✓
+12. Perusahaan bisa akses dashboard sendiri → 200                    ✓
+13. Perusahaan bisa akses kelola lowongan → 200                      ✓
+14. Pencari kerja bisa akses profil → 200                            ✓
+15. Perusahaan bisa akses profil → 200                               ✓
+16. Akses langsung URL dashboard perusahaan oleh pencari kerja → 403 ✓
+17. Akses langsung URL dashboard pencari kerja oleh perusahaan → 403 ✓
+
+**Hasil: 17 tests, 22 assertions → LULUS SEMUA (OK 100%).**
+
+================================================================
+4. Daftar File Penting
+================================================================
+- Baru:
+  * app/Http/Middleware/EnsureUserHasRole.php
+  * resources/views/dashboard/job-seeker.blade.php
+  * resources/views/dashboard/employer.blade.php
+  * tests/Feature/RoleAccessTest.php
+
+- Diupdate:
+  * bootstrap/app.php (tambah alias middleware 'role')
+  * routes/web.php (tambah group auth & role)
+
+================================================================
+5. Catatan Teknis
+================================================================
+- Middleware `auth` (bawaan Laravel) menangani redirect ke login.
+- Middleware `role` (custom) menangani pemeriksaan peran setelah login.
+- Kedua middleware diterapkan secara berlapis (nested group) di routes.
+- Tidak ada perubahan pada Model User, Enum UserRole, atau migrasi
+  database — semua menggunakan struktur dari SKM-36 milik Rama.
+
+**Status:** Berhasil diimplementasikan dan diverifikasi.
