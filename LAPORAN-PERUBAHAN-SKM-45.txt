@@ -1,0 +1,159 @@
+================================================================================
+LAPORAN PERUBAHAN TIKET SKM-45: SIMPAN DAN VALIDASI DATA AKUN PENGGUNA
+================================================================================
+Tanggal: 17 November 2026
+Branch: Branch_Dimas
+Status: SELESAI (Backend Only)
+
+--------------------------------------------------------------------------------
+1. RINGKASAN AUDIT KODE SEBELUM PERUBAHAN (KONDISI AWAL VS PERUBAHAN)
+--------------------------------------------------------------------------------
+Kondisi Awal:
+- Model User (`app/Models/User.php`):
+  Hanya memiliki $fillable ['name', 'email', 'password']. Belum ada kolom 'role'
+  maupun konstanta/helper terkait peran pengguna. Password sudah menggunakan cast 'hashed'.
+- Migration (`database/migrations/`):
+  Tabel 'users' hanya mendefinisikan kolom id, name, email (unique), email_verified_at,
+  password, remember_token, dan timestamps. Belum ada kolom 'role'.
+- Validasi Server-Side:
+  Belum terdapat Form Request khusus untuk pembuatan/penyimpanan akun pengguna.
+- Controller & Route:
+  Hanya ada `Controller.php` dan `routes/web.php` dasar (hanya memuat GET /).
+- View & Desain:
+  Hanya ada `resources/views/welcome.blade.php`. Belum ada form view pendaftaran akun
+  di branch ini. Sesuai aturan keras, file view/desain TIDAK DIUBAH sama sekali.
+- Testing Awal:
+  Hanya ada 2 test bawaan (ExampleTest) dengan status lulus.
+
+Perubahan yang Dilakukan:
+- Menambahkan Enum `app/Enums/UserRole.php` untuk standarisasi peran pengguna:
+  `job_seeker` (Pencari Kerja), `employer` (Perusahaan), dan `user` (Pengguna).
+- Membuat file migration baru:
+  `database/migrations/2026_11_17_000001_add_role_to_users_table.php`
+  yang menambahkan kolom 'role' (string, default: 'user') setelah kolom 'password',
+  lengkap dengan fungsi rollback `dropColumn('role')`.
+- Memperbarui `app/Models/User.php`:
+  Menambahkan 'role' ke `$fillable`, menambahkan konstanta ROLE_JOB_SEEKER, ROLE_EMPLOYER,
+  ROLE_USER, serta helper `roleEnum()`, `isJobSeeker()`, dan `isEmployer()`.
+  Cast `'password' => 'hashed'` dan `$hidden = ['password', 'remember_token']` dipertahankan.
+- Memperbarui `database/factories/UserFactory.php`:
+  Menetapkan nilai default role ke `job_seeker`, serta menambahkan state helper
+  `employer()` dan `jobSeeker()`.
+- Membuat Form Request `app/Http/Requests/StoreUserRequest.php`:
+  Menerapkan aturan validasi server-side lengkap dengan pesan berbahasa Indonesia:
+  * name: required|string|max:255
+  * email: required|string|email:rfc|max:255|unique:users,email
+  * password: required|string|min:8|confirmed (jika konfirmasi disertakan)
+  * role: required|string|in:[valid roles]
+- Membuat Controller `app/Http/Controllers/UserController.php`:
+  Menyimpan akun baru hanya menggunakan `$request->validated()` dalam `DB::transaction(...)`.
+  Password otomatis di-hash satu kali oleh cast Eloquent (tidak di-hash ganda).
+  Mendukung respons JSON (201) untuk API dan Redirect Back untuk form web.
+  Menangani exception dengan DB rollback, error logging, dan respons error standar.
+- Menambahkan route di `routes/web.php`:
+  * POST `/users` -> UserController@store (name: users.store)
+  * POST `/register` -> UserController@store (name: register)
+- Membuat Feature Test komprehensif di `tests/Feature/UserAccountStorageTest.php`
+  mencakup 7 skenario wajib (10 test case, 61 assertion lulus).
+
+--------------------------------------------------------------------------------
+2. DAFTAR FILE YANG DIBUAT / DIUBAH
+--------------------------------------------------------------------------------
+File Baru:
+1. `app/Enums/UserRole.php`
+   - Definisi Enum peran pengguna (`job_seeker`, `employer`, `user`) dan helper-nya.
+2. `database/migrations/2026_11_17_000001_add_role_to_users_table.php`
+   - Migration aman untuk menambahkan kolom 'role' ke tabel 'users' beserta method down().
+3. `app/Http/Requests/StoreUserRequest.php`
+   - Form request validasi penyimpanan akun dengan pesan bahasa Indonesia.
+4. `app/Http/Controllers/UserController.php`
+   - Controller penyimpanan akun pengguna dengan transaksi DB dan sanitasi input.
+5. `tests/Feature/UserAccountStorageTest.php`
+   - Feature test mencakup 7 skenario pengujian wajib tiket SKM-45.
+6. `LAPORAN-PERUBAHAN-SKM-45.txt`
+   - File dokumentasi rekapitulasi perubahan backend.
+
+File Dimodifikasi:
+1. `app/Models/User.php`
+   - Menambahkan 'role' ke $fillable, konstanta role, dan helper peran.
+2. `database/factories/UserFactory.php`
+   - Menambahkan field 'role' dan state builder role untuk keperluan testing/seeding.
+3. `routes/web.php`
+   - Mendaftarkan endpoint penyimpanan akun POST `/users` dan POST `/register`.
+
+--------------------------------------------------------------------------------
+3. VERIFIKASI KEAMANAN ENVIRONMENT & DESAIN
+--------------------------------------------------------------------------------
+- File `.env` dan `.env.*`: TIDAK DIUBAH SAMA SEKALI.
+- File konfigurasi `config/*.php`: TIDAK DIUBAH SAMA SEKALI.
+- File view / Blade (`resources/views/**`): TIDAK DIUBAH SAMA SEKALI.
+- File styling (`resources/css/**`, Tailwind, PostCSS): TIDAK DIUBAH SAMA SEKALI.
+- File script UI (`resources/js/**`): TIDAK DIUBAH SAMA SEKALI.
+- File aset `public/**`: TIDAK DIUBAH SAMA SEKALI.
+
+Hasil git diff --stat:
+ .env.example                       | 12 ++++++------ (milik user, tidak disentuh)
+ app/Models/User.php                | 32 ++++++++++++++++++++++++++++++++
+ database/factories/UserFactory.php | 22 ++++++++++++++++++++++
+ p.txt                              |  0 (milik user, tidak disentuh)
+ package-lock.json                  |  2 +- (sinkronisasi nama package dari npm install)
+ routes/web.php                     |  4 ++++
+ 6 files changed, 65 insertions(+), 7 deletions(-)
+
+--------------------------------------------------------------------------------
+4. HASIL PENGUJIAN & BUILD
+--------------------------------------------------------------------------------
+A. PHPUnit Test (`php artisan test`):
+   PASS  Tests\Unit\ExampleTest (that true is true)
+   PASS  Tests\Feature\ExampleTest (the application returns a successful response)
+   PASS  Tests\Feature\UserAccountStorageTest
+     ✓ user account can be created with valid data and role is saved
+     ✓ password is stored as a secure hash and not plain text
+     ✓ registration fails when required fields are missing
+     ✓ registration fails when email format is invalid
+     ✓ registration fails when email is already registered
+     ✓ registration fails when role is invalid
+     ✓ role cannot be arbitrarily injected via mass assignment or privileged inputs
+     ✓ password validation enforces minimum length and confirmation
+
+   Total: 10 passed (61 assertions) - Status: 100% LULUS
+
+B. Migration & Rollback Test:
+   - `php artisan migrate`: Berhasil menjalankan `2026_11_17_000001_add_role_to_users_table`.
+   - `php artisan migrate:rollback --step=1`: Berhasil me-rollback kolom role secara bersih.
+   - `php artisan migrate`: Berhasil menjalankan kembali migration dengan status aktif.
+
+C. Code Formatter / Linter (`./vendor/bin/pint --test`):
+   - Seluruh 8 file backend yang dibuat/diubah telah diperiksa dan lulus standar PSR-12 Laravel.
+
+D. Frontend Build (`npm run build`):
+   - Vite build berjalan lancar dan sukses tanpa error (0 errors).
+
+--------------------------------------------------------------------------------
+5. TEMUAN UI & OBSERVASI
+--------------------------------------------------------------------------------
+- Pada branch `Branch_Dimas`, belum terdapat file template Blade untuk tampilan form
+  pendaftaran (`resources/views/auth/register.blade.php` atau sejenisnya).
+- Di file `welcome.blade.php`, tombol/link pendaftaran dikondisikan dengan `@if (Route::has('register'))`.
+  Dengan adanya route backend `register`, route tersebut kini aktif. Namun karena belum ada
+  tampilan form Blade khusus di branch ini, alur registrasi saat ini siap menerima data via
+  POST request (API / form submission).
+- Sesuai ATURAN KERAS DESAIN, tidak ada file Blade baru atau modifikasi tampilan yang dibuat.
+  Jika form registrasi tampilan (Blade) nantinya ingin ditambahkan atau digabungkan dari
+  branch lain (misal dari branch integrasi/auth), dapat dilakukan pada tahap berikutnya.
+
+--------------------------------------------------------------------------------
+6. ASUMSI & KEPUTUSAN TEKNIS YANG DIAMBIL
+--------------------------------------------------------------------------------
+- Nilai Role yang didukung:
+  Mengikuti kebutuhan platform MitraKerja, Enum `UserRole` mencakup:
+  1. `job_seeker` (Pencari Kerja)
+  2. `employer` (Perusahaan)
+  3. `user` (Pengguna umum / fallback)
+- Kolom 'role' pada migration diberi nilai default 'user' untuk memastikan kompatibilitas
+  dan integritas data jika terdapat user lama yang tidak memiliki role.
+- Kolom 'password' diproteksi dengan cast 'hashed' pada Model User, sehingga tidak
+  di-hash manual dua kali pada Controller.
+- Input penyimpanan akun dibatasi secara ketat hanya pada data yang telah divalidasi
+  melalui `$request->validated()`.
+================================================================================
