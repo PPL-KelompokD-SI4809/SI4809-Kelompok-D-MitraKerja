@@ -40,8 +40,7 @@ class JobSeekerRegistrationTest extends TestCase
     }
 
 
-    public function test_registration_is_blocked_until_account_role_dependency_exists(): void
-
+    public function test_registration_creates_job_seeker_account_with_job_seeker_role(): void
     {
         $response = $this->from(route('jobseeker.register'))->post(route('jobseeker.register.store'), [
             'name' => 'Didit Aditya Rahman',
