@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\UserRole;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
@@ -29,8 +30,29 @@ class UserFactory extends Factory
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
+            'role' => UserRole::JOB_SEEKER->value,
             'remember_token' => Str::random(10),
         ];
+    }
+
+    /**
+     * Indicate that the user is an employer.
+     */
+    public function employer(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'role' => UserRole::EMPLOYER->value,
+        ]);
+    }
+
+    /**
+     * Indicate that the user is a job seeker.
+     */
+    public function jobSeeker(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'role' => UserRole::JOB_SEEKER->value,
+        ]);
     }
 
     /**

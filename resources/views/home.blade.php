@@ -565,14 +565,13 @@
 
                 {{-- CTA Tunggal --}}
                 <div class="flex-shrink-0 w-full md:w-auto">
-                    <button type="button"
-                            onclick="showToast('Pendaftaran pemberi kerja belum tersedia pada versi ini.', false)"
+                    <a href="{{ route('employer.register') }}"
                             class="w-full md:w-auto inline-flex items-center justify-center gap-2.5 px-7 py-3.5 bg-[#0062E3] hover:bg-blue-700 active:scale-95 text-white font-semibold text-xs sm:text-sm rounded-xl shadow-md hover:shadow-lg transition cursor-pointer">
                         <span>Daftar sebagai Pemberi Kerja</span>
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
                         </svg>
-                    </button>
+                    </a>
                 </div>
             </div>
 
@@ -736,9 +735,9 @@
                         </div>
                         <div class="min-w-0 flex-1">
                             <h4 class="text-sm font-bold text-slate-700 transition-colors group-hover:text-amber-700">Pemberi Kerja / Perusahaan</h4>
-                            <p id="auth-employer-copy" class="mt-1 text-xs leading-relaxed text-slate-500">Pendaftaran perusahaan sedang dipersiapkan.</p>
+                            <p id="auth-employer-copy" class="mt-1 text-xs leading-relaxed text-slate-500">Buat akun untuk kebutuhan rekrutmen perusahaan.</p>
                         </div>
-                        <span class="shrink-0 text-slate-400 transition-transform group-hover:translate-x-1 group-hover:text-amber-600">&rarr;</span>
+                        <span id="auth-employer-arrow" class="shrink-0 text-slate-400 transition-transform group-hover:translate-x-1 group-hover:text-amber-600">&rarr;</span>
                     </button>
                 </div>
 
@@ -997,6 +996,8 @@ function openAuthModal(mode) {
     const employerOption = document.getElementById('auth-employer-option');
     const jobseekerCopy = document.getElementById('auth-jobseeker-copy');
     const jobseekerArrow = document.getElementById('auth-jobseeker-arrow');
+    const employerCopy = document.getElementById('auth-employer-copy');
+    const employerArrow = document.getElementById('auth-employer-arrow');
 
     eyebrowEl.textContent = isRegistration ? 'MULAI BERSAMA MITRAKERJA' : 'AKSES MITRAKERJA';
     titleEl.textContent = isRegistration
@@ -1012,6 +1013,10 @@ function openAuthModal(mode) {
         ? 'Buat akun untuk mulai mencari peluang kerja.'
         : 'Akses masuk pencari kerja belum tersedia pada versi ini.';
     jobseekerArrow.classList.toggle('opacity-0', !isRegistration);
+    employerCopy.textContent = isRegistration
+        ? 'Buat akun untuk kebutuhan rekrutmen perusahaan.'
+        : 'Akses masuk perusahaan belum tersedia pada versi ini.';
+    employerArrow.classList.toggle('opacity-0', !isRegistration);
 
     document.getElementById('auth-modal').classList.remove('hidden');
     lockPageScroll();
@@ -1030,8 +1035,7 @@ function chooseJobSeekerAuth() {
 
 function chooseEmployerAuth() {
     if (authModalMode === 'daftar') {
-        closeAuthModal();
-        showToast('Pendaftaran pemberi kerja sedang dipersiapkan.', false);
+        window.location.href = '{{ route('employer.register') }}';
     }
 }
 

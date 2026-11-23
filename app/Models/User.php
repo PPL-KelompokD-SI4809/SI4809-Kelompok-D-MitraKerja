@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Enums\UserRole;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -13,9 +14,9 @@ class User extends Authenticatable
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
 
-    public const ROLE_JOB_SEEKER = 'job_seeker';
+    public const ROLE_JOB_SEEKER = UserRole::JOB_SEEKER->value;
 
-    public const ROLE_EMPLOYER = 'employer';
+    public const ROLE_EMPLOYER = UserRole::EMPLOYER->value;
 
     /**
      * The attributes that are mass assignable.
@@ -50,5 +51,29 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    /**
+     * Get the backing UserRole enum instance, if valid.
+     */
+    public function roleEnum(): ?UserRole
+    {
+        return is_string($this->role) ? UserRole::tryFrom($this->role) : null;
+    }
+
+    /**
+     * Check if the user is a job seeker.
+     */
+    public function isJobSeeker(): bool
+    {
+        return $this->role === UserRole::JOB_SEEKER->value;
+    }
+
+    /**
+     * Check if the user is an employer.
+     */
+    public function isEmployer(): bool
+    {
+        return $this->role === UserRole::EMPLOYER->value;
     }
 }
