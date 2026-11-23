@@ -1,0 +1,15 @@
+Zidan — SKM-21: Verifikasi Konfigurasi Route Utama
+
+1. Membuka folder proyek MitraKerja menggunakan Visual Studio Code.
+2. Memastikan branch aktif adalah `Branch_Zidan`.
+3. Menjalankan `git fetch origin` untuk mengambil informasi commit terbaru dari GitHub.
+4. Memeriksa status repository menggunakan `git status`.
+5. Memeriksa commit terbaru menggunakan `git log --oneline HEAD..origin/Branch_Zidan`. Hasilnya tidak menampilkan commit baru.
+6. Menjalankan perintah `php artisan route:list` untuk melihat daftar route Laravel.
+7. Memastikan route utama `/` terdaftar dengan method `GET|HEAD`.
+8. Memeriksa file `routes/web.php` dan menemukan konfigurasi `Route::get('/', function () { return view('home'); });`.
+9. Memastikan route utama mengarah ke halaman `home`.
+
+**Hasil:** Route utama `/` berhasil terdaftar dan diarahkan ke view `home` yang digunakan sebagai halaman landing page MitraKerja.
+
+**Status:** Berhasil diverifikasi.

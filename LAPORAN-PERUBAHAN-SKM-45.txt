@@ -1,0 +1,71 @@
+================================================================================
+LAPORAN PERUBAHAN TIKET SKM-45: SIMPAN DAN VALIDASI DATA AKUN PENGGUNA
+================================================================================
+Tanggal: 17 November 2026
+Branch: Branch_Dimas
+Status: SELESAI & SUDAH DISINKRONKAN DENGAN ORIGIN/MAIN
+
+--------------------------------------------------------------------------------
+1. STATUS SINKRONISASI DENGAN ORIGIN/MAIN
+--------------------------------------------------------------------------------
+- Merge dari branch utama (`origin/main`) ke branch aktif (`Branch_Dimas`) telah selesai.
+- Penyelarasan konflik (Pilihan 1):
+  * `app/Enums/UserRole.php`: Diselaraskan 100% dengan `origin/main`, mendefinisikan
+    peran standar `JOB_SEEKER = 'job_seeker'` dan `EMPLOYER = 'employer'`.
+  * `app/Models/User.php`: Diselaraskan dengan konstanta peran, helper `isJobSeeker()`
+    dan `isEmployer()`, cast `'password' => 'hashed'`, serta `$fillable` yang aman.
+  * `routes/web.php`: Menggabungkan rute lengkap dari `origin/main` (home, login,
+    jobseeker register, employer register, unified register, profile) dan route
+    backend penyimpanan akun pengguna SKM-45: `POST /users` (`UserController@store`).
+  * `JobSeekerRegistrationController.php` & `JobSeekerRegistrationTest.php`:
+    Membersihkan artefak duplikasi method/import dari `origin/main` sehingga sintaks
+    PHP kembali valid dan bebas error.
+
+--------------------------------------------------------------------------------
+2. RINGKASAN IMPLEMENTASI SKM-45
+--------------------------------------------------------------------------------
+- Model User (`app/Models/User.php`):
+  Memiliki atribut 'role' di `$fillable`, konstanta peran, dan helper pengecekan peran.
+  Password di-cast sebagai 'hashed' (hash otomatis saat disimpan, tanpa double hashing).
+- Migration (`database/migrations/2026_11_17_000001_add_role_to_users_table.php`):
+  Menambahkan kolom 'role' pada tabel users jika belum ada, serta method down() yang aman.
+- Form Request (`app/Http/Requests/StoreUserRequest.php`):
+  Validasi server-side lengkap dengan pesan bahasa Indonesia:
+  * name: required|string|max:255
+  * email: required|string|email:rfc|max:255|unique:users,email
+  * password: required|string|min:8|confirmed (jika disertakan)
+  * role: required|string|in:[job_seeker, employer]
+- Controller (`app/Http/Controllers/UserController.php`):
+  Menyimpan akun baru hanya menggunakan `$request->validated()` dalam `DB::transaction(...)`.
+  Mendukung respons JSON (201) untuk API dan Redirect Back untuk form web.
+  Menangani exception dengan DB rollback, error logging, dan respons error standar.
+- Route (`routes/web.php`):
+  Mendaftarkan endpoint `POST /users` (name: `users.store`) dan `POST /register`.
+- Feature Testing (`tests/Feature/UserAccountStorageTest.php`):
+  Mencakup 7 skenario pengujian wajib tiket SKM-45.
+
+--------------------------------------------------------------------------------
+3. VERIFIKASI KEAMANAN ENVIRONMENT & DESAIN
+--------------------------------------------------------------------------------
+- File `.env` dan `.env.*`: TIDAK DIUBAH SAMA SEKALI.
+- File konfigurasi `config/*.php`: TIDAK DIUBAH SAMA SEKALI.
+- Perubahan lokal Anda pada `.env.example` dan `p.txt` tetap dibiarkan dan TIDAK DI-COMMIT.
+
+--------------------------------------------------------------------------------
+4. HASIL PENGUJIAN & BUILD
+--------------------------------------------------------------------------------
+A. PHPUnit Test Suite (`php artisan test`):
+   PASS  Tests\Unit\ExampleTest
+   PASS  Tests\Feature\ExampleTest
+   PASS  Tests\Feature\JobSeekerRegistrationTest (4 tests)
+   PASS  Tests\Feature\UserAccountStorageTest (8 tests)
+   PASS  Tests\Feature\UserRoleTest (9 tests)
+
+   Total: 23 passed (224 assertions) - Status: 100% LULUS
+
+B. Linter / Formatter (`./vendor/bin/pint --test`):
+   Status: PASSED (Seluruh file backend memenuhi standar PSR-12).
+
+C. Frontend Build (`npm run build`):
+   Status: SUCCESS (Build Vite selesai dalam 2.09s tanpa error).
+================================================================================

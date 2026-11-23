@@ -1,0 +1,51 @@
+========================================================
+LAPORAN PERUBAHAN - TIKET KM-36
+Atur Peran Pencari Kerja dan Perusahaan
+========================================================
+
+1. Status Git & Sinkronisasi
+- Branch aktif: Branch_Rama (disinkronkan dengan pembaruan main).
+- Git status & pull: aman, berhasil update ke commit terbaru (Merge PR #7) tanpa konflik. File lokal lama tetap aman dan env tidak disentuh.
+
+2. Apa Saja yang Dikerjakan?
+- Sepakati & Buat Enum Role:
+  Dibuat di `app/Enums/UserRole.php`. Isinya cuma 2 peran:
+  * 'job_seeker' (buat pencari kerja)
+  * 'employer'   (buat perusahaan)
+
+- Database Migration & Model:
+  * Nambahin kolom `role` di tabel `users` lewat migrasi baru. Default-nya `job_seeker` biar aman buat data yang udah ada, dan bisa di-rollback kapan aja.
+  * Update model `User.php` biar kolom `role` bisa diisi (fillable) dan nambahin helper function buat cek role (`isJobSeeker()`, `isEmployer()`).
+
+- Alur Pendaftaran:
+  * Pencari Kerja: langsung dapet role `job_seeker`.
+  * Perusahaan: dibuatkan halaman & controller pendaftaran baru di `/daftar/perusahaan`, langsung dapet role `employer`.
+  * Modal di landing page (home) sekarang udah nyambung langsung ke halaman daftar perusahaan.
+
+- Keamanan & Validasi Server:
+  * Role ditentukan langsung sama server, gak percaya mentah-mentah input dari user.
+  * Kalau ada yang coba-coba kirim role 'admin', 'Admin', 'ADMIN', atau role kosong/acak lewat form publik, langsung ditolak dan akun gak bakal kebuat.
+  * Dibuatkan endpoint `/profil` buat baca role akun yang tersimpan, dan role ini dikunci biar gak bisa diganti lewat edit profil biasa.
+
+3. Hasil Testing
+Semua unit & feature test dijalankan pakai PHPUnit:
+- Hasil: 15 test, 165 assertions -> LULUS SEMUA (OK 100%).
+- Semua skenario tiket (role job_seeker & employer tersimpan rapi, bisa dibaca lagi, input admin/kosong ditolak, rollback migrasi) udah teruji dan aman.
+
+4. Daftar File Penting
+- Baru:
+  * app/Enums/UserRole.php
+  * database/migrations/2026_11_14_000001_add_role_to_users_table.php
+  * app/Http/Controllers/EmployerRegistrationController.php
+  * app/Http/Controllers/RegistrationController.php
+  * app/Http/Controllers/ProfileController.php
+  * resources/views/auth/register-employer.blade.php
+  * tests/Feature/UserRoleTest.php
+- Diupdate:
+  * app/Models/User.php
+  * app/Http/Controllers/JobSeekerRegistrationController.php
+  * database/factories/UserFactory.php
+  * resources/views/home.blade.php
+  * routes/web.php
+  * tests/Feature/JobSeekerRegistrationTest.php
+========================================================

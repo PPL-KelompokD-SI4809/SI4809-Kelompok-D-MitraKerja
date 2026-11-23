@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\UserRole;
 use App\Models\User;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\RedirectResponse;
@@ -21,15 +22,31 @@ class JobSeekerRegistrationController extends Controller
     }
 
     /**
-     * Create a job-seeker account once the account and role contracts exist.
+     * Create a job-seeker account with the job_seeker role.
      *
-     * SKM-45 owns account storage and SKM-36 owns the role contract. This
-     * controller deliberately refuses to create an account until both are
-     * available, preventing a public registration from producing an account
-     * without a role or from accepting an arbitrary role from the request.
+     * The role is strictly enforced by the server and never trusted from raw user input.
+     * Any attempt to register as Admin or other unwhitelisted roles is explicitly rejected.
      */
     public function store(Request $request): RedirectResponse
     {
+        // Explicitly check and reject privileged or unwhitelisted roles from form tampering
+        if ($request->has('role')) {
+            $rawRole = (string) $request->input('role');
+            $normalizedRole = strtolower(trim($rawRole));
+
+            if (in_array($normalizedRole, ['admin', 'administrator', 'superadmin'], true)) {
+                return back()
+                    ->withInput($request->except('password', 'password_confirmation'))
+                    ->withErrors(['role' => 'Pendaftaran peran Admin tidak diizinkan melalui form publik.']);
+            }
+
+            if (! in_array($normalizedRole, ['job_seeker', 'jobseeker', 'pencari_kerja', 'pencari-kerja'], true)) {
+                return back()
+                    ->withInput($request->except('password', 'password_confirmation'))
+                    ->withErrors(['role' => 'Peran yang dipilih tidak valid untuk pendaftaran pencari kerja.']);
+            }
+        }
+
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255'],
@@ -62,7 +79,7 @@ class JobSeekerRegistrationController extends Controller
                 'name' => $validated['name'],
                 'email' => $validated['email'],
                 'password' => $validated['password'],
-                'role' => 'pencari_kerja',
+                'role' => UserRole::JOB_SEEKER->value,
             ]);
         } catch (QueryException) {
             return $this->registrationDependencyUnavailable($request);
