@@ -1,7 +1,7 @@
 
 <?php
 
-use App\Http\Controllers\EmployerRegistrationController;
+use App\Http\Controllers\CompanyRegistrationController;
 use App\Http\Controllers\JobSeekerRegistrationController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RegistrationController;
@@ -26,10 +26,10 @@ Route::post('/daftar/pencari-kerja', [JobSeekerRegistrationController::class, 's
     ->name('jobseeker.register.store');
 
 // Perusahaan / Employer Registration Routes
-Route::get('/daftar/perusahaan', [EmployerRegistrationController::class, 'create'])
+Route::get('/daftar/perusahaan', [CompanyRegistrationController::class, 'create'])
     ->name('employer.register');
 
-Route::post('/daftar/perusahaan', [EmployerRegistrationController::class, 'store'])
+Route::post('/daftar/perusahaan', [CompanyRegistrationController::class, 'store'])
     ->name('employer.register.store');
 
 // Unified Public Registration Endpoint
