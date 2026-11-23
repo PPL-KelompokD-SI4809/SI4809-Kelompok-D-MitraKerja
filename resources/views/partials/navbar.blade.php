@@ -52,7 +52,9 @@
             {{-- ===== Tombol Masuk & Daftar (Desktop) ===== --}}
             <div class="hidden md:flex items-center gap-3">
                 <button type="button"
-                        onclick="openAuthModal('masuk')"
+                        aria-haspopup="dialog"
+                        aria-controls="login-role-dialog"
+                        onclick="openLoginRoleDialog(this)"
                         class="inline-flex items-center justify-center px-5 py-2 text-sm font-semibold text-[#0062E3] bg-white border border-[#0062E3] rounded-lg hover:bg-blue-50 active:scale-95 transition cursor-pointer">
                     Masuk
                 </button>
@@ -103,7 +105,9 @@
             </a>
             <div class="pt-3 mt-2 border-t border-gray-100 flex flex-col gap-2">
                 <button type="button"
-                        onclick="closeMobileMenu(); openAuthModal('masuk')"
+                        aria-haspopup="dialog"
+                        aria-controls="login-role-dialog"
+                        onclick="closeMobileMenu(); openLoginRoleDialog(document.getElementById('btn-mobile-menu'))"
                         class="w-full text-center px-4 py-3 border border-[#0062E3] text-sm font-semibold rounded-xl text-[#0062E3] hover:bg-blue-50 cursor-pointer transition">
                     Masuk
                 </button>

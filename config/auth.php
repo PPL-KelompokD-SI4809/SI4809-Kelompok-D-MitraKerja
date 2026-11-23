@@ -4,6 +4,9 @@ use App\Models\User;
 
 return [
 
+    // Fill only after SKM-36 role values and dashboard routes are agreed.
+    'role_home_routes' => [],
+
     /*
     |--------------------------------------------------------------------------
     | Authentication Defaults

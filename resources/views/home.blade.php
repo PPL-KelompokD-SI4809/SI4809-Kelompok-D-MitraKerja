@@ -673,8 +673,10 @@
 </div>
 
 {{-- ============================================================ --}}
-{{-- MODAL 2: AUTENTIKASI (MASUK / DAFTAR)                        --}}
+{{-- MODAL 2: DAFTAR                                               --}}
 {{-- ============================================================ --}}
+@include('partials.login-role-dialog')
+
 <div id="auth-modal"
      class="hidden fixed inset-0 z-50"
      role="dialog"
@@ -984,10 +986,6 @@ function applyJob() {
 let authModalMode = 'daftar';
 
 function openAuthModal(mode) {
-    if (mode === 'masuk') {
-        window.location.href = '{{ route('login') }}';
-        return;
-    }
     authModalMode = mode === 'masuk' ? 'masuk' : 'daftar';
 
     const isRegistration = authModalMode === 'daftar';
@@ -1042,8 +1040,27 @@ function chooseEmployerAuth() {
 }
 
 // ===== Keyboard ESC =====
+const loginRoleDialog = document.getElementById('login-role-dialog');
+let loginRoleTrigger;
+
+function openLoginRoleDialog(trigger) {
+    loginRoleTrigger = trigger;
+    trigger.focus();
+    loginRoleDialog.showModal();
+    lockPageScroll();
+}
+
+loginRoleDialog.addEventListener('click', event => {
+    if (event.target === loginRoleDialog) loginRoleDialog.close();
+});
+
+loginRoleDialog.addEventListener('close', () => {
+    unlockPageScroll();
+    loginRoleTrigger?.focus();
+});
+
 document.addEventListener('keydown', e => {
-    if (e.key === 'Escape') {
+    if (e.key === 'Escape' && !loginRoleDialog.open) {
         closeJobModal();
         closeAuthModal();
     }

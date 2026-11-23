@@ -78,9 +78,9 @@
                     </div>
                 @endif
 
-                @if ($errors->has('registration'))
+                @if ($errors->has('registration') || $errors->has('role'))
                     <div class="mb-5 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm leading-relaxed text-amber-900" role="alert">
-                        {{ $errors->first('registration') }}
+                        {{ $errors->first('registration') ?: 'Peran akun ditetapkan oleh sistem.' }}
                     </div>
                 @endif
 

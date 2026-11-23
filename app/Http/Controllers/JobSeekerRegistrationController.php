@@ -51,6 +51,7 @@ class JobSeekerRegistrationController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'role' => ['missing'],
         ], [
             'name.required' => 'Nama lengkap wajib diisi.',
             'email.required' => 'Alamat email wajib diisi.',
@@ -62,10 +63,6 @@ class JobSeekerRegistrationController extends Controller
 
         try {
             if (! Schema::hasTable('users') || ! Schema::hasColumn('users', 'role')) {
-                return $this->registrationDependencyUnavailable($request);
-            }
-
-            if (! in_array('role', (new User)->getFillable(), true)) {
                 return $this->registrationDependencyUnavailable($request);
             }
 
@@ -87,7 +84,7 @@ class JobSeekerRegistrationController extends Controller
 
         return redirect()
             ->route('jobseeker.register')
-            ->with('status', 'Akun pencari kerja berhasil dibuat. Silakan masuk saat fitur autentikasi tersedia.');
+            ->with('status', 'Akun pencari kerja berhasil dibuat. Silakan masuk dengan akun Anda.');
     }
 
     private function registrationDependencyUnavailable(Request $request): RedirectResponse
