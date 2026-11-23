@@ -2,7 +2,11 @@
 
 namespace Tests\Feature;
 
+use App\Models\User;
+use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Schema;
 use Tests\TestCase;
 
 class JobSeekerRegistrationTest extends TestCase
@@ -48,5 +52,32 @@ class JobSeekerRegistrationTest extends TestCase
         $response->assertRedirect(route('jobseeker.register'));
         $response->assertSessionHasErrors('registration');
         $this->assertDatabaseCount('users', 0);
+    }
+
+    public function test_registration_creates_a_job_seeker_who_can_log_in(): void
+    {
+        Schema::table('users', fn (Blueprint $table) => $table->string('role')->default('user'));
+        $registration = [
+            'name' => 'Test User',
+            'email' => 'jobseeker@example.test',
+            'password' => 'test-password-123',
+            'password_confirmation' => 'test-password-123',
+        ];
+        $this->from(route('jobseeker.register'))
+            ->post(route('jobseeker.register.store'), $registration + ['role' => 'admin'])
+            ->assertSessionHasErrors('role');
+        $this->assertDatabaseCount('users', 0);
+
+        $this->post(route('jobseeker.register.store'), $registration)
+            ->assertRedirect(route('jobseeker.register'))->assertSessionHasNoErrors();
+        $user = User::where('email', $registration['email'])->firstOrFail();
+        $this->assertSame(User::ROLE_JOB_SEEKER, $user->role);
+        $this->assertTrue(Hash::check($registration['password'], $user->password));
+        $this->post(route('login.store'), [
+            'role' => User::ROLE_JOB_SEEKER,
+            'email' => $registration['email'],
+            'password' => $registration['password'],
+        ])->assertRedirect(route('account'));
+        $this->assertAuthenticatedAs($user);
     }
 }

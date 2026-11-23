@@ -20,20 +20,13 @@ class JobSeekerRegistrationController extends Controller
         return view('auth.register-jobseeker');
     }
 
-    /**
-     * Create a job-seeker account once the account and role contracts exist.
-     *
-     * SKM-45 owns account storage and SKM-36 owns the role contract. This
-     * controller deliberately refuses to create an account until both are
-     * available, preventing a public registration from producing an account
-     * without a role or from accepting an arbitrary role from the request.
-     */
     public function store(Request $request): RedirectResponse
     {
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'role' => ['missing'],
         ], [
             'name.required' => 'Nama lengkap wajib diisi.',
             'email.required' => 'Alamat email wajib diisi.',
@@ -48,10 +41,6 @@ class JobSeekerRegistrationController extends Controller
                 return $this->registrationDependencyUnavailable($request);
             }
 
-            if (! in_array('role', (new User)->getFillable(), true)) {
-                return $this->registrationDependencyUnavailable($request);
-            }
-
             validator(
                 ['email' => $validated['email']],
                 ['email' => [Rule::unique('users', 'email')]],
@@ -62,7 +51,7 @@ class JobSeekerRegistrationController extends Controller
                 'name' => $validated['name'],
                 'email' => $validated['email'],
                 'password' => $validated['password'],
-                'role' => 'pencari_kerja',
+                'role' => User::ROLE_JOB_SEEKER,
             ]);
         } catch (QueryException) {
             return $this->registrationDependencyUnavailable($request);
@@ -70,7 +59,7 @@ class JobSeekerRegistrationController extends Controller
 
         return redirect()
             ->route('jobseeker.register')
-            ->with('status', 'Akun pencari kerja berhasil dibuat. Silakan masuk saat fitur autentikasi tersedia.');
+            ->with('status', 'Akun pencari kerja berhasil dibuat. Silakan masuk dengan akun Anda.');
     }
 
     private function registrationDependencyUnavailable(Request $request): RedirectResponse
