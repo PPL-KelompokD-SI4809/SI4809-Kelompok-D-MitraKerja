@@ -9,3 +9,22 @@ Membuat file `.env` berdasarkan `.env.example`, kemudian menyesuaikan konfiguras
 Mengatur koneksi database pada file `.env example` agar project Laravel terhubung dengan database cloud yang disediakan oleh dosen.
 5 Verifikasi Konfigurasi
 Melakukan pengecekan konfigurasi dan memastikan koneksi database cloud dapat digunakan oleh project Laravel.
+
+
+Farhan — SKM-23: Smoke Test Integrasi Website
+
+Langkah:
+Menjalankan composer install, npm install, npm run build dengan Node 22, membuat .env, dan php artisan key:generate. Mengecek nama database dengan SELECT, menjalankan php artisan config:clear, php artisan db:show, dan php artisan serve. Menguji HTTP tiga kali serta buka dan refresh lewat Edge headless.
+
+Hasil:
+Laravel 12.70.2, dependensi, dan build aset berhasil disiapkan. Koneksi MySQL ke SI4809_PPL_D berhasil. Landing page MitraKerja tampil dengan HTTP 200 saat dibuka dan di-refresh. Aset lokal mendapat HTTP 200 dan tidak ada error JavaScript. Session dan cache memakai file lokal. Tidak menjalankan migration/seeder atau mengubah tabel dan data online.
+
+Catatan:
+Nama database di server memakai huruf kapital SI4809_PPL_D, jadi .env lokal disesuaikan. Node 18 tidak sesuai kebutuhan Vite, sehingga build memakai Node 22 sementara. Unduhan awal sempat timeout, lalu berhasil saat dicoba ulang dengan akses jaringan. Tidak ditemukan error 404 atau 500 selama smoke test.
+
+Pengecekan ulang Farhan — SKM-23:
+Halaman sempat HTTP 500 karena public/build/manifest.json tidak ditemukan. Menjalankan ulang npm run build dengan Node 22. Setelah itu, tiga tes HTTP serta buka dan refresh di Edge headless mendapat HTTP 200. CSS dan JavaScript berhasil dimuat tanpa error JavaScript. Halaman dari kode saat ini menampilkan "Layout Dasar Blade MitraKerja Siap Digunakan". Tidak mengubah kode fitur, route, atau database.
+
+Integrasi Branch_Farhan dengan origin/main — SKM-23:
+Melakukan fetch dan merge origin/main ke Branch_Farhan agar landing page lengkap kembali. Konflik pada TXT diselesaikan dengan mempertahankan seluruh catatan SKM-16 Rama, SKM-23 Farhan, dan catatan pengecekan ulang sebelumnya.
+Hasil: npm run build berhasil. Landing page lengkap mendapat HTTP 200 pada tiga tes HTTP serta saat dibuka dan di-refresh lewat Edge headless. CSS, JavaScript, dan gambar mendapat HTTP 200 tanpa error JavaScript. Konfigurasi .env tetap sama. Tidak menjalankan migration/seeder atau mengubah data online.
