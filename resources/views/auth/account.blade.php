@@ -13,7 +13,11 @@
         <section class="rounded-3xl border border-slate-200 bg-white p-8">
             <h1 class="text-2xl font-bold">Akun Anda</h1>
             <p class="mt-4">Anda masuk sebagai {{ auth()->user()->name }}.</p>
-            <p class="mt-4 text-sm leading-relaxed text-slate-600" role="status">Dashboard sesuai peran belum tersedia. Halaman ini hanya menampilkan status sesi akun Anda.</p>
+            @if (auth()->user()->isJobSeeker())
+                <a href="{{ route('dashboard.job_seeker') }}" class="mt-4 inline-flex text-sm font-semibold text-[#0062E3] hover:underline">Buka Dashboard Pencari Kerja</a>
+            @else
+                <p class="mt-4 text-sm leading-relaxed text-slate-600">Halaman ini menampilkan status sesi akun Anda.</p>
+            @endif
             <form method="POST" action="{{ route('logout') }}" class="mt-6">
                 @csrf
                 <button class="rounded-xl bg-[#0062E3] px-5 py-3 font-semibold text-white hover:bg-blue-700" type="submit">Keluar</button>

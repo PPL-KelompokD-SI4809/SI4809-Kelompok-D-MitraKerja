@@ -3,6 +3,7 @@
 
 use App\Http\Controllers\AuthenticatedSessionController;
 use App\Http\Controllers\CompanyRegistrationController;
+use App\Http\Controllers\JobSeekerProfileDetailController;
 use App\Http\Controllers\JobSeekerRegistrationController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RegistrationController;
@@ -71,6 +72,19 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/dashboard/pencari-kerja', function () {
             return view('dashboard.job-seeker');
         })->name('dashboard.job_seeker');
+
+        Route::get('/dashboard/pencari-kerja/profil', [ProfileController::class, 'editJobSeeker'])
+            ->name('jobseeker.profile.edit');
+        Route::patch('/dashboard/pencari-kerja/profil', [ProfileController::class, 'updateJobSeeker'])
+            ->name('jobseeker.profile.update');
+        Route::patch('/dashboard/pencari-kerja/profil/bagian/{section}', [JobSeekerProfileDetailController::class, 'update'])
+            ->whereIn('section', array_keys(JobSeekerProfileDetailController::SECTIONS))->name('jobseeker.profile.section');
+        Route::post('/dashboard/pencari-kerja/profil/cv', [JobSeekerProfileDetailController::class, 'uploadCv'])
+            ->name('jobseeker.profile.cv.upload');
+        Route::get('/dashboard/pencari-kerja/profil/cv', [JobSeekerProfileDetailController::class, 'downloadCv'])
+            ->name('jobseeker.profile.cv.download');
+        Route::delete('/dashboard/pencari-kerja/profil/cv', [JobSeekerProfileDetailController::class, 'deleteCv'])
+            ->name('jobseeker.profile.cv.delete');
 
         Route::get('/lowongan', function () {
             return response()->json(['message' => 'Daftar lowongan untuk pencari kerja']);

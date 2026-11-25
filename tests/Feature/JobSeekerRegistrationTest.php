@@ -2,16 +2,11 @@
 
 namespace Tests\Feature;
 
-use App\Models\User;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Schema;
 use App\Enums\UserRole;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Schema;
-
 use Tests\TestCase;
 
 class JobSeekerRegistrationTest extends TestCase
@@ -90,7 +85,6 @@ class JobSeekerRegistrationTest extends TestCase
 
     public function test_registration_creates_a_job_seeker_who_can_log_in(): void
     {
-        Schema::table('users', fn (Blueprint $table) => $table->string('role')->default('user'));
         $registration = [
             'name' => 'Test User',
             'email' => 'jobseeker@example.test',
