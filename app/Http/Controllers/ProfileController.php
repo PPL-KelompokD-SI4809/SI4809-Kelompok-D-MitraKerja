@@ -2,14 +2,46 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
+use App\Models\JobSeekerProfileDetail;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Validation\ValidationException;
+use Illuminate\View\View;
 
 class ProfileController extends Controller
 {
+    public function editJobSeeker(Request $request): View
+    {
+        $user = $request->user();
+        $detailsAvailable = Schema::hasTable('job_seeker_profile_details');
+
+        return view('profile.job-seeker', [
+            'user' => $user,
+            'detailsAvailable' => $detailsAvailable,
+            'details' => $detailsAvailable ? JobSeekerProfileDetail::where('user_id', $user->id)->first() : null,
+            'sections' => JobSeekerProfileDetailController::SECTIONS,
+        ]);
+    }
+
+    public function updateJobSeeker(Request $request): RedirectResponse
+    {
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+        ], [
+            'name.required' => 'Nama lengkap wajib diisi.',
+            'name.string' => 'Nama lengkap harus berupa teks.',
+            'name.max' => 'Nama lengkap maksimal 255 karakter.',
+        ]);
+
+        $request->user()->update($validated);
+
+        return redirect()->route('jobseeker.profile.edit')
+            ->with('status', 'Profil berhasil diperbarui.');
+    }
+
     /**
      * Display the authenticated user's profile and stored role.
      */

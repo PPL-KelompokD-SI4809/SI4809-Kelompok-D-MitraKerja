@@ -3,10 +3,8 @@
 namespace Tests\Feature;
 
 use App\Models\User;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Schema;
 use Tests\TestCase;
 
 class AuthenticationTest extends TestCase
@@ -18,7 +16,6 @@ class AuthenticationTest extends TestCase
         parent::setUp();
         $this->assertSame('sqlite', config('database.default'));
         $this->assertSame(':memory:', config('database.connections.sqlite.database'));
-        Schema::table('users', fn (Blueprint $table) => $table->string('role')->default('job_seeker'));
     }
 
     public function test_login_page_and_protected_account(): void
@@ -40,7 +37,8 @@ class AuthenticationTest extends TestCase
             ->assertRedirect('/akun');
         $this->assertAuthenticatedAs($user);
         $this->assertNotSame($before, session()->getId());
-        $this->get('/akun')->assertOk()->assertSee('Dashboard sesuai peran belum tersedia');
+        $this->get('/akun')->assertOk()->assertSee('Buka Dashboard Pencari Kerja')
+            ->assertSee(route('dashboard.job_seeker'), false);
         $this->get('/masuk')->assertRedirect('/akun');
     }
 

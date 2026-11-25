@@ -270,12 +270,11 @@ class UserRoleTest extends TestCase
     {
         $this->assertTrue(Schema::hasColumn('users', 'role'));
 
-        // Rollback the add_role migration
-        $this->artisan('migrate:rollback', ['--step' => 1]);
+        $path = 'database/migrations/2026_11_17_000001_add_role_to_users_table.php';
+        $this->artisan('migrate:rollback', ['--path' => $path])->assertSuccessful();
         $this->assertFalse(Schema::hasColumn('users', 'role'));
 
-        // Re-run the migration
-        $this->artisan('migrate');
+        $this->artisan('migrate', ['--path' => $path])->assertSuccessful();
         $this->assertTrue(Schema::hasColumn('users', 'role'));
     }
 }
